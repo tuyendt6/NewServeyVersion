@@ -128,8 +128,10 @@ public class QuestionAdapter extends ArrayAdapter<QuestionObject> {
         final QuestionObject serveyOject = mListDealer.get(position);
         holder.QuestionName.setText(serveyOject.getTEXTO_PREGUNTA());
         String[] questionoption = serveyOject.getQuestionType().split("@@");
-        String[] su = questionoption[0].split(";");
-        serveyOject.setQuestionAnswer(su[1]);
+        if (serveyOject.getQuestionAnswer().equals("0")) {
+            String[] su = questionoption[0].split(";");
+            serveyOject.setQuestionAnswer(su[1]);
+        }
 
 
         switch (questionoption.length) {

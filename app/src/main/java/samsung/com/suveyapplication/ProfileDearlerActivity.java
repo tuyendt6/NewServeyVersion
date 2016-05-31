@@ -81,7 +81,7 @@ public class ProfileDearlerActivity extends AppCompatActivity implements View.On
 
     private void checkTakedServey() {
 
-        Log.e("tuyenpx","tuyenpx called here checkTakedServey ");
+        Log.e("tuyenpx", "tuyenpx called here checkTakedServey ");
 
         String pkID = Util.DealerSelected.getPKID();
 
@@ -129,6 +129,8 @@ public class ProfileDearlerActivity extends AppCompatActivity implements View.On
 
 
     private void insertQuestion(String densitos) {
+        if (arrayList.size() > 0)
+            arrayList.removeAll(arrayList);
         Cursor d = getContentResolver().query(SamsungProvider.URI_ENCUESTA_PREGUNTAS, null, tblEncuestaPreguntas.DISENO_ID + " =? ", new String[]{densitos}, null);
         Log.e("tuyenpx", "insertQuestion size = " + d.getCount() + "densitos = " + densitos);
         if (d != null && d.getCount() > 0)

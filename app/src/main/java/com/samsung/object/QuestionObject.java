@@ -1,7 +1,5 @@
 package com.samsung.object;
 
-import android.util.Log;
-
 /**
  * Created by SamSunger on 5/16/2015.
  */

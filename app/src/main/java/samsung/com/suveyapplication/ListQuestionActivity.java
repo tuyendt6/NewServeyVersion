@@ -273,12 +273,14 @@ public class ListQuestionActivity extends AppCompatActivity {
         c.close();
     }
 
+
     private String getQuestionType(String ID) {
         Cursor d = getContentResolver().query(SamsungProvider.URI_ENCURESTA_RESPUESTAS, null, tblEncuestaRespuestas.GRUPO_RESQUEST_AS_ID + "=?", new String[]{ID}, null);
         String result = "";
         while (d.moveToNext()) {
             result = result + d.getString(d.getColumnIndexOrThrow(tblEncuestaRespuestas.DESCRIPCION)) + ";" + d.getString(d.getColumnIndexOrThrow(tblEncuestaRespuestas.PK_ID)) + "@@";
         }
+        Log.e("tuyenpx","quesstion type = "+ result);
         d.close();
         result = result.substring(0, result.length() - 2);
         return result;
@@ -479,8 +481,12 @@ public class ListQuestionActivity extends AppCompatActivity {
                 if (resp.trim().contains("true")) {
                     Log.e("AddDealer", "upload succes" + resp);
                     flag = true;
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(tblEncuestaDatos.SYS, "true");
+                    getContentResolver().update(SamsungProvider.URI_ENCUESTADATOS,contentValues,tblEncuestaDatos.DISENO_ID + "=?", new String[]{Util.ServeySelected.getPK_ID()});
 
-                    getContentResolver().delete(SamsungProvider.URI_ENCUESTADATOS, tblEncuestaDatos.DISENO_ID + "=?", new String[]{Util.ServeySelected.getPK_ID()});
+
+                //    getContentResolver().update(SamsungProvider.URI_ENCUESTADATOS, tblEncuestaDatos.DISENO_ID + "=?", new String[]{Util.ServeySelected.getPK_ID()});
                 } else {
                     Log.e("AddDealer", "upload fail" + resp);
                 }

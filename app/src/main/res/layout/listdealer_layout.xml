@@ -5,14 +5,34 @@
     android:layout_height="match_parent"
     android:background="@drawable/backgroung">
 
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:text="Informe de Encuestas"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView10"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"
+        android:text="Selecione la Fecha"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_below="@+id/textView11"
+        android:layout_marginTop="3dp"
         android:orientation="horizontal">
 
         <ImageButton
@@ -59,7 +79,8 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout" />
 
 
 </RelativeLayout>

@@ -43,15 +43,16 @@ public class PostReceiver extends BroadcastReceiver {
     }
 
     private Location mLocation;
-    private Double lat =0.0;
-    private Double Lang=0.0;
+    private Double lat = 0.0;
+    private Double Lang = 0.0;
     private String provider;
     LocationListener locationListener;
     LocationManager locationManager;
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        mContext=context;
-        if(isNetworkOnline()){
+        mContext = context;
+        if (isNetworkOnline()) {
             locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
             Criteria criteria = new Criteria();
@@ -65,7 +66,7 @@ public class PostReceiver extends BroadcastReceiver {
 
             provider = locationManager.getBestProvider(criteria, false);
             mLocation = locationManager.getLastKnownLocation(provider);
-            if (mLocation!=null){
+            if (mLocation != null) {
                 lat = mLocation.getLatitude();
                 Lang = mLocation.getLongitude();
             }
@@ -100,14 +101,14 @@ public class PostReceiver extends BroadcastReceiver {
 
 
     void doWorkWithNewLocation(Location location) {
-        if(mLocation == null){
+        if (mLocation == null) {
             mLocation = location;
             return;
         }
-        if(isBetterLocation(mLocation, location)) {
+        if (isBetterLocation(mLocation, location)) {
             mLocation = location;
         }
-        if (mLocation!=null){
+        if (mLocation != null) {
             lat = mLocation.getLatitude();
             Lang = mLocation.getLongitude();
             new PostDealerDatas().execute();
@@ -118,7 +119,7 @@ public class PostReceiver extends BroadcastReceiver {
 
     boolean isBetterLocation(Location oldLocation, Location newLocation) {
         // If there is no old location, of course the new location is better.
-        if(oldLocation == null) {
+        if (oldLocation == null) {
             return true;
         }
 
@@ -127,16 +128,16 @@ public class PostReceiver extends BroadcastReceiver {
 
         // Check if new location more accurate. Accuracy is radius in meters, so less is better.
         boolean isMoreAccurate = newLocation.getAccuracy() < oldLocation.getAccuracy();
-        if(isMoreAccurate && isNewer) {
+        if (isMoreAccurate && isNewer) {
             // More accurate and newer is always better.
             return true;
-        } else if(isMoreAccurate && !isNewer) {
+        } else if (isMoreAccurate && !isNewer) {
             // More accurate but not newer can lead to bad fix because of user movement.
             // Let us set a threshold for the maximum tolerance of time difference.
             long timeDifference = newLocation.getTime() - oldLocation.getTime();
 
             // If time difference is not greater then allowed threshold we accept it.
-            if(timeDifference > -TIME_DIFFERENCE_THRESHOLD) {
+            if (timeDifference > -TIME_DIFFERENCE_THRESHOLD) {
                 return true;
             }
         }
@@ -145,7 +146,7 @@ public class PostReceiver extends BroadcastReceiver {
     }
 
     public String getProviderName() {
-        LocationManager locationManager =  (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
         Criteria criteria = new Criteria();
         criteria.setPowerRequirement(Criteria.POWER_LOW); // Chose your desired power consumption level.
@@ -160,28 +161,28 @@ public class PostReceiver extends BroadcastReceiver {
         return locationManager.getBestProvider(criteria, true);
     }
 
-    public  void pauseRev(){
+    public void pauseRev() {
         locationManager.removeUpdates(locationListener);
     }
 
-    public  void resumeRev(){
+    public void resumeRev() {
         locationManager.requestLocationUpdates(provider, 400, 1,
                 locationListener);
     }
 
     private boolean isNetworkOnline() {
-        boolean status=false;
-        try{
+        boolean status = false;
+        try {
             ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getNetworkInfo(0);
-            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
-                status= true;
-            }else {
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
                 netInfo = cm.getNetworkInfo(1);
-                if(netInfo!=null && netInfo.getState()==NetworkInfo.State.CONNECTED)
-                    status= true;
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -194,27 +195,27 @@ public class PostReceiver extends BroadcastReceiver {
         protected Void doInBackground(Void[] params) {
 
 
-            Cursor c  =  mContext.getContentResolver().query(SamsungProvider.URI_PUNTOS_DEVENTA,null,tblPuntosDeVenta.ISYS+"=?",new String[]{"false"},null);
+            Cursor c = mContext.getContentResolver().query(SamsungProvider.URI_PUNTOS_DEVENTA, null, tblPuntosDeVenta.ISYS + "=?", new String[]{"false"}, null);
 
-            while (c.moveToNext()){
+            while (c.moveToNext()) {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost(
                         "http://www.tagzone.io/Ode/WebService.asmx/addNewPuntosDeVenta");
                 try {
                     List<NameValuePair> nameValuePair = new ArrayList<>(0);
-                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.FACT_DEFT_ID,c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.FACT_DEFT_ID))));
+                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.FACT_DEFT_ID, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.FACT_DEFT_ID))));
                     nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.NOMBRE, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.NOMBRE))));
                     nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.DIRECCION, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.DIRECCION))));
-                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.PROVINCIAID,c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.PROVINCIAID))));
-                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.DISTRITOID,c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.DISTRITOID))));
-                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.CORREGIMIENTOID,c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.CORREGIMIENTOID))));
+                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.PROVINCIAID, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.PROVINCIAID))));
+                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.DISTRITOID, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.DISTRITOID))));
+                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.CORREGIMIENTOID, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.CORREGIMIENTOID))));
                     nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.ZONAID, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.ZONAID))));
                     nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.DESCCION_ADICIONALES, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.DESCCION_ADICIONALES))));
                     nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.TELEFONO, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.TELEFONO))));
-                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.ACTIVO,c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.ACTIVO))));
+                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.ACTIVO, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.ACTIVO))));
                     nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.EMAIL1, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.EMAIL1))));
                     nameValuePair.add(new BasicNameValuePair("Email2", ""));
-                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.POSION_LAT,c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.POSION_LAT))));
+                    nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.POSION_LAT, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.POSION_LAT))));
                     nameValuePair.add(new BasicNameValuePair(tblPuntosDeVenta.POSION_LON, c.getString(c.getColumnIndexOrThrow(tblPuntosDeVenta.POSION_LON))));
 
 
@@ -241,12 +242,13 @@ public class PostReceiver extends BroadcastReceiver {
             return null;
         }
     }
+
     class PostDealerDatas extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void[] params) {
-            Cursor c  =  mContext.getContentResolver().query(SamsungProvider.URI_ENCUESTADATOS,null,tblEncuestaDatos.SYS+"=?",new String[]{"false"},null);
-            Log.e("tuyen.px","lat and long : "+lat+" : "+Lang);
-            while(c.moveToNext()){
+            Cursor c = mContext.getContentResolver().query(SamsungProvider.URI_ENCUESTADATOS, null, tblEncuestaDatos.SYS + "=?", new String[]{"false"}, null);
+            Log.e("tuyen.px", "lat and long : " + lat + " : " + Lang);
+            while (c.moveToNext()) {
 
                 // Create a new HttpClient and Post Header
                 HttpClient httpclient = new DefaultHttpClient();
@@ -257,21 +259,21 @@ public class PostReceiver extends BroadcastReceiver {
                     nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.DISENO_ID, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.DISENO_ID))));
                     nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.VENDEDOR_ID, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.VENDEDOR_ID))));
                     nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PDV_ID, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PDV_ID))));
-                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.FECHAHORA_ENCUESTA,c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.FECHAHORA_ENCUESTA))));//update date vao day
-                    if(lat==0.0||Lang==0.0){
-                        lat=8.982861    ;
-                        Lang=-79.526903    ;
+                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.FECHAHORA_ENCUESTA, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.FECHAHORA_ENCUESTA))));//update date vao day
+                    if (lat == 0.0 || Lang == 0.0) {
+                        lat = 8.982861;
+                        Lang = -79.526903;
                     }
-                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.POSICIONENCUESTA_LON,Lang+""));
-                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.POSICIONENCUESTA_LAT,lat+""));
+                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.POSICIONENCUESTA_LON, Lang + ""));
+                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.POSICIONENCUESTA_LAT, lat + ""));
                     nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.FECHA_HORA_REGISTRO, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.FECHA_HORA_REGISTRO))));//dont understand what mean ?
-                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.POSICION_REGISTROLAT,lat+""));
-                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.POSOCION_REGISTRO_LON,Lang+""));
-                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_01,c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_01))));
-                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_02,c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_02))));
+                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.POSICION_REGISTROLAT, lat + ""));
+                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.POSOCION_REGISTRO_LON, Lang + ""));
+                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_01, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_01))));
+                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_02, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_02))));
                     nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_03, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_03))));
-                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_04,c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_04))));
-                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_05,c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_05))));
+                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_04, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_04))));
+                    nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_05, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_05))));
                     nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_06, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_06))));
                     nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_07, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_07))));
                     nameValuePair.add(new BasicNameValuePair(tblEncuestaDatos.PREGUNTA_08, c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.PREGUNTA_08))));
@@ -284,7 +286,9 @@ public class PostReceiver extends BroadcastReceiver {
                     String resp = EntityUtils.toString(response.getEntity());
                     if (resp.trim().contains("true")) {
                         Log.e("AddDealer", "upload offline" + resp);
-                        mContext.getContentResolver().delete(SamsungProvider.URI_ENCUESTADATOS,tblEncuestaDatos.DISENO_ID+"=?",new String[]{c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.DISENO_ID))});
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(tblEncuestaDatos.SYS, "true");
+                        mContext.getContentResolver().update(SamsungProvider.URI_ENCUESTADATOS, contentValues, tblEncuestaDatos.DISENO_ID + "=?", new String[]{c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.DISENO_ID))});
                     }
                     Log.e("AddDealer", "upload offline" + resp);
                 } catch (Exception e) {

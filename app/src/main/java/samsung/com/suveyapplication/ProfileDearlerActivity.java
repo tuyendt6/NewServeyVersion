@@ -2,6 +2,7 @@ package samsung.com.suveyapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,6 +26,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.samsung.object.Dealer;
 import com.samsung.object.Util;
+import com.samsung.provider.SamsungProvider;
+import com.samsung.table.tblEncuestaDatos;
+import com.samsung.table.tblEncuestaDisenos;
+import com.samsung.table.tblEncuestaPreguntas;
+import com.samsung.table.tblEncuestaRespuestas;
+
+import java.util.ArrayList;
 
 /**
  * Created by SamSunger on 5/15/2015.
@@ -71,6 +79,92 @@ public class ProfileDearlerActivity extends AppCompatActivity implements View.On
         //setUpMapIfNeeded();
     }
 
+    private void checkTakedServey() {
+        String pkID = Util.DealerSelected.getPKID();
+
+        Cursor c = getContentResolver().query(SamsungProvider.URI_ENCUESTADATOS, null, tblEncuestaDatos.PDV_ID + "=?", new String[]{pkID}, null);
+
+        if (c != null & c.getCount() > 0) {
+            c.moveToFirst();
+            mStartSerVey.setVisibility(View.GONE);
+            mAddress.setText(getServeyName(c.getString(c.getColumnIndex(tblEncuestaDatos.DISENO_ID))));
+            insertQuestion(c.getString(c.getColumnIndex(tblEncuestaDatos.DISENO_ID)));
+            Log.e("tuyenpx", "mlistquestion size = " + arrayList.size());
+
+            for (int i = 0; i < arrayList.size(); i++) {
+
+                String value = c.getString(c.getColumnIndex("Pregunta0" + (i + 1)));
+                Log.e("tuyenpx", "colum_name = " + "Pregunta0" + (i + 1));
+                Log.e("tuyenpx", "value = " + value);
+
+                arrayList.get(i).Answer = getAnserName(value);
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+
+            for (int i = 0; i < arrayList.size(); i++) {
+                stringBuilder.append(arrayList.get(i).Question + " : " + arrayList.get(i).Answer + "\n");
+            }
+            Log.e("tuyenpx", " stringBuilder = " + stringBuilder.toString());
+            mCity.setText(stringBuilder.toString());
+        }
+        c.close();
+
+
+    }
+
+
+    private String getAnserName(String id) {
+        String date = "";
+        Cursor d = getContentResolver().query(SamsungProvider.URI_ENCURESTA_RESPUESTAS, null, tblEncuestaRespuestas.PK_ID + "=?", new String[]{id}, null);
+        if (d != null && d.getCount() > 0) {
+            d.moveToFirst();
+            date = d.getString(d.getColumnIndexOrThrow(tblEncuestaRespuestas.DESCRIPCION));
+            d.getCount();
+        }
+        return date;
+    }
+
+
+    private void insertQuestion(String densitos) {
+        Cursor d = getContentResolver().query(SamsungProvider.URI_ENCUESTA_PREGUNTAS, null, tblEncuestaPreguntas.DISENO_ID + " =? ", new String[]{densitos}, null);
+        Log.e("tuyenpx", "insertQuestion size = " + d.getCount() + "densitos = " + densitos);
+        if (d != null && d.getCount() > 0)
+            while (d.moveToNext()) {
+                AnswerQuestion answerQuestion = new AnswerQuestion();
+                answerQuestion.Question = d.getString(d.getColumnIndex(tblEncuestaPreguntas.TEXTO_PREGUNTA));
+                arrayList.add(answerQuestion);
+            }
+
+        d.close();
+    }
+
+
+    ArrayList<AnswerQuestion> arrayList = new ArrayList();
+
+
+    class AnswerQuestion {
+        public String Question;
+        public String Answer;
+
+        public AnswerQuestion() {
+        }
+    }
+
+
+    String getServeyName(String densitos) {
+        String date = "";
+        Cursor c = getContentResolver().query(SamsungProvider.URI_ENCUESTA_DISENOS, null, tblEncuestaDisenos.PK_ID + "=?", new String[]{densitos}, null);
+        if (c != null & c.getCount() > 0) {
+            c.moveToFirst();
+            date = c.getString(c.getColumnIndex(tblEncuestaDisenos.NOMBRE));
+            c.close();
+        }
+
+        return date;
+
+    }
+
+
     boolean flags = true;
 
     @Override
@@ -79,6 +173,7 @@ public class ProfileDearlerActivity extends AppCompatActivity implements View.On
         dealer = Util.DealerSelected;
         setUpMapIfNeeded();
         SetupView();
+        checkTakedServey();
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener listener = new LocationListener() {
 

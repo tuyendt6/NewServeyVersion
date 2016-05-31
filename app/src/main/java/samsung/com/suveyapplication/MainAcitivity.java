@@ -14,6 +14,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.samsung.object.Util;
+
 /**
  * Created by SamSunger on 5/13/2015.
  */
@@ -120,5 +122,11 @@ public class MainAcitivity extends AppCompatActivity
             Log.e("MainActivity", "Error in creating fragment");
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Util.String_Date = "";
     }
 }

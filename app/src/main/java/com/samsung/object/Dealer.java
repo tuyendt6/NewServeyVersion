@@ -140,6 +140,6 @@ public class Dealer {
 
     @Override
     public String toString() {
-        return DealerName;
+        return PKID+" : "+DealerName+" : "+Latitud +" : " +LongGitude;
     }
 }

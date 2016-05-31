@@ -56,6 +56,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +74,6 @@ public class AddDealerAcitivity extends Fragment implements GoogleApiClient.Conn
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LatLng mLatLng = null;
     private GoogleApiClient mGoogleApiClient;
-
 
 
     @Override
@@ -255,7 +256,7 @@ public class AddDealerAcitivity extends Fragment implements GoogleApiClient.Conn
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_add, menu);
-       MenuItem searchItem = menu.findItem(R.id.add);
+        MenuItem searchItem = menu.findItem(R.id.add);
         searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -316,17 +317,9 @@ public class AddDealerAcitivity extends Fragment implements GoogleApiClient.Conn
 
                 if (flag == false) {
                     Util.DealerSelected = dealer;
-                    DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-                    if (drawer != null)
-                        drawer.closeDrawer(GravityCompat.START);
-
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame_container, new ListDealersActivity()).commit();
-
-
                     //add to database :
                     ContentValues values = new ContentValues();
+                    values.put(tblPuntosDeVenta.PK_ID, dealer.getPKID());// 2
                     values.put(tblPuntosDeVenta.ACTIVO, dealer.getStatus());// 2
                     values.put(tblPuntosDeVenta.DESCCION_ADICIONALES, "");// 3
                     values.put(tblPuntosDeVenta.DIRECCION, dealer.getAdress());// 4
@@ -349,13 +342,11 @@ public class AddDealerAcitivity extends Fragment implements GoogleApiClient.Conn
     }
 
 
-
-
     private void setUpMap() {
         Log.e("tuyen.px", "set up map");
-        mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()))
-                .anchor(0.5f, 1));
+//        mMap.addMarker(new MarkerOptions()
+//                .position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()))
+//                .anchor(0.5f, 1));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 6);
 
 // Zoom in, animating the camera.
@@ -417,7 +408,6 @@ public class AddDealerAcitivity extends Fragment implements GoogleApiClient.Conn
         }
     }
 
-
     private int getConreginmientosID(String distritoID) {
         int result = 0;
         Cursor c = getActivity().getContentResolver().query(SamsungProvider.URI_CONREEGIMIENTOS, null, tblDistritos._ID + " =?", new String[]{distritoID + ""}, null);
@@ -465,16 +455,31 @@ public class AddDealerAcitivity extends Fragment implements GoogleApiClient.Conn
                     ContentValues values = new ContentValues();
                     values.put(tblPuntosDeVenta.ISYS, "");// 12
                     getActivity().getContentResolver().update(SamsungProvider.URI_PUNTOS_DEVENTA, values,
-                            tblPuntosDeVenta.NOMBRE + "=?", new String[]{
+                            tblPuntosDeVenta.NOMBRE + " =?", new String[]{
                                     dealer.getDealerName()});
-                    Log.e("AddDealer", "upload susscess" + resp);
+                    Log.e("AddDealer", "upload susscess" + resp + dealer.toString());
                 } else {
                     Log.e("AddDealer", "upload fail" + resp);
                 }
-            } catch (Exception e) {
-                Log.e("AddDealer", "upload fail" + e.toString());
+            } catch (UnsupportedEncodingException e) {
+                Log.e("AddDealer", "UnsupportedEncodingException fail" + e.toString());
+            } catch (IOException e) {
+                Log.e("AddDealer", "IOException fail" + e.toString());
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+            if (drawer != null)
+                drawer.closeDrawer(GravityCompat.START);
+
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, new ListDealersActivity()).commit();
+
         }
     }
 

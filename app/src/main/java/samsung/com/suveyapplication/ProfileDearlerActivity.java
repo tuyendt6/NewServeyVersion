@@ -81,7 +81,7 @@ public class ProfileDearlerActivity extends AppCompatActivity implements View.On
 
     private void checkTakedServey() {
 
-        Log.e("tuyenpx", "tuyenpx called here checkTakedServey ");
+        Log.e("tuyenpx", "tuyenpx called here checkTakedServey " + Util.DealerSelected.getPKID());
 
         String pkID = Util.DealerSelected.getPKID();
 

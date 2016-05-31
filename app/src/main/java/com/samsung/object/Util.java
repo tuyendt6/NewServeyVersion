@@ -10,4 +10,6 @@ public class Util {
     public static String currentLong = "0.0";
 
     public static String String_Date = "";
+
+    public static String String_Date_Servey = "";
 }

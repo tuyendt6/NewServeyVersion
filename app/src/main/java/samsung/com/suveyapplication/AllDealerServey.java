@@ -1,6 +1,8 @@
 package samsung.com.suveyapplication;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,6 +10,9 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.samsung.adapter.DealerAdapter;
 import com.samsung.customview.interfaces.onSearchListener;
@@ -33,7 +39,12 @@ import com.samsung.table.tblProvincias;
 import com.samsung.table.tblPuntosDeVenta;
 import com.samsung.table.tblZonas;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Computer on 4/2/2016.
@@ -83,12 +94,22 @@ public class AllDealerServey extends Fragment implements onSimpleSearchActionsLi
     private MaterialSearchView materialSearchView;
     private WindowManager mWindowManager;
     private boolean mSearchViewAdded = false;
+    private TextView textView1;
+    private TextView textView2;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View RooView = inflater.inflate(R.layout.all_dealer_layout, container, false);
+
+        textView1 = (TextView) RooView.findViewById(R.id.textView10);
+        textView1.setVisibility(View.VISIBLE);
+        textView1.setText("Encuestas : ");
+
+        textView2 = (TextView) RooView.findViewById(R.id.textView11);
+        textView2.setText(Util.String_Date_Servey);
+        textView2.setVisibility(View.VISIBLE);
 
         setHasOptionsMenu(true);
 
@@ -156,6 +177,20 @@ public class AllDealerServey extends Fragment implements onSimpleSearchActionsLi
 
     }
 
+    private String ConverString(String date_date) {
+
+        DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.000",
+                Locale.ENGLISH);
+        DateFormat targetFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = null;
+        try {
+            date = originalFormat.parse(date_date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return targetFormat.format(date);
+    }
 
     private void openKeyboard() {
         new Handler().postDelayed(new Runnable() {
@@ -195,8 +230,32 @@ public class AllDealerServey extends Fragment implements onSimpleSearchActionsLi
             }
         }
         c.close();
+
+        if (mListDealer.size() == 0) {
+            showDialog();
+        }
     }
 
+    private void showDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Notificación")
+                .setMessage("No hay informes en el sistema")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+                        if (drawer != null)
+                            drawer.closeDrawer(GravityCompat.START);
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame_container, new ListDateServeyFragement()).commit();
+                        dialog.cancel();
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
 
     private boolean checkTakedServey(String pkID) {
         //     String pkID = Util.DealerSelected.getPKID();
@@ -204,7 +263,11 @@ public class AllDealerServey extends Fragment implements onSimpleSearchActionsLi
         Cursor c = getActivity().getContentResolver().query(SamsungProvider.URI_ENCUESTADATOS, null, tblEncuestaDatos.PDV_ID + "=?", new String[]{pkID}, null);
 
         if (c != null & c.getCount() > 0) {
-            flag = true;
+            c.moveToFirst();
+            String Date = c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.FECHA_HORA_REGISTRO));
+            if (Util.String_Date_Servey.trim().equals(ConverString(Date).trim())) {
+                flag = true;
+            }
         }
         c.close();
         return flag;

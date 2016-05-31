@@ -117,7 +117,7 @@ public class MainAcitivity extends AppCompatActivity
             finish();
         } else if (id == R.id.report_servey) {
             toolbar.setTitle("Informes");
-            fragment = new AllDealerServey();
+            fragment = new ListDateServeyFragement();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null)

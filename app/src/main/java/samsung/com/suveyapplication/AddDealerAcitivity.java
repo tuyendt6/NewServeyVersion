@@ -478,7 +478,7 @@ public class AddDealerAcitivity extends Fragment implements GoogleApiClient.Conn
 
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, new ListDealersActivity()).commit();
+                    .replace(R.id.frame_container, new AllDealerActivity()).commit();
 
         }
     }

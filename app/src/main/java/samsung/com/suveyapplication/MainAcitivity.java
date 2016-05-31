@@ -22,11 +22,13 @@ import com.samsung.object.Util;
 
 public class MainAcitivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -96,9 +98,12 @@ public class MainAcitivity extends AppCompatActivity
 
         if (id == R.id.list_all_dealers) {
             fragment = new AllDealerActivity();
+            toolbar.setTitle("Listar Puntos de Venta");
         } else if (id == R.id.add_new_dealer) {
             fragment = new AddDealerAcitivity();
+            toolbar.setTitle("Añadir Nuevo Punto de Venta");
         } else if (id == R.id.start_servey) {
+            toolbar.setTitle("Iniciar Nueva Encuesta");
             fragment = new ListDealersActivity();
         } else if (id == R.id.sys_database) {
             Intent i = new Intent(getBaseContext(), LoadingActivity.class);
@@ -106,9 +111,13 @@ public class MainAcitivity extends AppCompatActivity
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
         } else if (id == R.id.general_map_view) {
+            toolbar.setTitle("Mapa General");
             fragment = new MapsActivity();
         } else if (id == R.id.exit) {
             finish();
+        } else if (id == R.id.report_servey) {
+            toolbar.setTitle("Informes");
+            fragment = new AllDealerServey();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null)

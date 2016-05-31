@@ -18,6 +18,10 @@
             android:id="@+id/general_map_view"
             android:title="Mapa General" />
         <item
+            android:id="@+id/report_servey"
+            android:title="Informes" />
+
+        <item
             android:id="@+id/exit"
             android:title="Salir" />
     </group>

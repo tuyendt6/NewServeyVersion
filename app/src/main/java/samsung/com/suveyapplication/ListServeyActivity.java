@@ -49,7 +49,8 @@ public class ListServeyActivity extends AppCompatActivity {
                 Intent i = new Intent(getBaseContext(), ListQuestionActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
-                Util.ServeySelected = (ServeyOject) mListServeyOjbect.get(position);
+                Util.ServeySelected = mListServeyOjbect.get(position);
+                finish();
             }
         });
         mNewServey = (ImageButton) findViewById(R.id.imbaddnewservey);
@@ -58,7 +59,7 @@ public class ListServeyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getBaseContext(), MainAcitivity.class);
-                i.putExtra("add","add");
+                i.putExtra("add", "add");
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
                 finish();
@@ -75,6 +76,9 @@ public class ListServeyActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        Log.e("tuyenpx", "tuyenpx = called me  ListServeyActivity ");
+
         if (mListServeyOjbect.size() == 0) {
             SetupView();
         }

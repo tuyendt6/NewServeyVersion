@@ -80,6 +80,9 @@ public class ProfileDearlerActivity extends AppCompatActivity implements View.On
     }
 
     private void checkTakedServey() {
+
+        Log.e("tuyenpx","tuyenpx called here checkTakedServey ");
+
         String pkID = Util.DealerSelected.getPKID();
 
         Cursor c = getContentResolver().query(SamsungProvider.URI_ENCUESTADATOS, null, tblEncuestaDatos.PDV_ID + "=?", new String[]{pkID}, null);
@@ -163,9 +166,6 @@ public class ProfileDearlerActivity extends AppCompatActivity implements View.On
         return date;
 
     }
-
-
-    boolean flags = true;
 
     @Override
     protected void onResume() {

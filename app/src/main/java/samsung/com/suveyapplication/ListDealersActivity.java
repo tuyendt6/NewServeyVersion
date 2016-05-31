@@ -164,6 +164,8 @@ public class ListDealersActivity extends Fragment implements onSimpleSearchActio
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
                 } else {
+                    Log.e("ListDealersActivity.px", "tuyen.px  call it again");
+
                     flag_click = false;
                     DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
                     if (drawer != null)

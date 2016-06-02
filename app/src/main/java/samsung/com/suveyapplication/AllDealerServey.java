@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -153,6 +152,15 @@ public class AllDealerServey extends Fragment implements onSimpleSearchActionsLi
         return RooView;
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mWindowManager != null) {
+            mWindowManager = null;
+        }
+    }
+
     private boolean searchActive = false;
     private MenuItem searchItem;
 
@@ -180,7 +188,7 @@ public class AllDealerServey extends Fragment implements onSimpleSearchActionsLi
 
     private String ConverString(String date_date) {
 
-        DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.000",
+        DateFormat originalFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a",
                 Locale.ENGLISH);
         DateFormat targetFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = null;
@@ -261,17 +269,18 @@ public class AllDealerServey extends Fragment implements onSimpleSearchActionsLi
     }
 
     private boolean checkTakedServey(String pkID) {
-        //     String pkID = Util.DealerSelected.getPKID();
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("question", Context.MODE_PRIVATE);
-        String ID = sharedPreferences.getString("venderID", "1");
+
+        Log.e("tuyenpx", "PKID = " + pkID);
+
         boolean flag = false;
         Cursor c = getActivity().getContentResolver().query(SamsungProvider.URI_ENCUESTADATOS, null, tblEncuestaDatos.PDV_ID + "=?", new String[]{pkID}, null);
 
         if (c != null & c.getCount() > 0) {
             c.moveToFirst();
-            String Date = c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.FECHA_HORA_REGISTRO));
-            String ID_Verder = c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.VENDEDOR_ID));
-            if (Util.String_Date_Servey.trim().equals(ConverString(Date).trim()) && ID_Verder.equals(ID)) {
+            String Date = c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.FECHAHORA_ENCUESTA));
+            Log.e("tuyenpx ", "getPKID pkID = " + pkID);
+            Log.e("tuyenpx ", "compare Date = " + Date + "Util.String_Date_Servey.trim() " + Util.String_Date_Servey.trim());
+            if (Util.String_Date_Servey.trim().equals(ConverString(Date).trim())) {
                 flag = true;
             }
         }

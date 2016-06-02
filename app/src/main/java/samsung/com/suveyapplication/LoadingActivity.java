@@ -287,7 +287,7 @@ public class LoadingActivity extends AppCompatActivity {
             }
             QueryEncuestaDatos();
             if (mListEncuestaRespuestas != null) {
-                mContext.getContentResolver().delete(SamsungProvider.URI_ENCURESTA_RESPUESTAS, tblEncuestaDatos.SYS + " =?", new String[]{"true"});
+                mContext.getContentResolver().delete(SamsungProvider.URI_ENCUESTADATOS, tblEncuestaDatos.SYS + " =?", new String[]{"true"});
             }
         }
 
@@ -390,7 +390,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         private void insertEncuestaDisenoses(List<Model2Jason.EncuestaDisenos> list) {
             if (list == null) {
-                Log.e("tuyen.px", "Insert table Vendedores ignored");
+                Log.e("tuyen.px", "Insert table EncuestaDisenoses ignored");
                 return;
             }
             for (Model2Jason.EncuestaDisenos va : list) {
@@ -412,7 +412,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         private void insertEncuestasPreguntases(List<Model2Jason.EncuestasPreguntas> list) {
             if (list == null) {
-                Log.e("tuyen.px", "Insert table Vendedores ignored");
+                Log.e("tuyen.px", "Insert table EncuestasPreguntases ignored");
                 return;
             }
             for (Model2Jason.EncuestasPreguntas va : list) {
@@ -437,7 +437,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         private void insertEncuestasRespuestasGruposes(List<Model2Jason.EncuestasRespuestasGrupos> list) {
             if (list == null) {
-                Log.e("tuyen.px", "Insert table Vendedores ignored");
+                Log.e("tuyen.px", "Insert table EncuestasRespuestasGruposes ignored");
                 return;
             }
             for (Model2Jason.EncuestasRespuestasGrupos va : list) {
@@ -487,7 +487,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         private void insertDealer(List<Model2Jason.PuntosDeVanta> list) {
             if (list == null) {
-                Log.e("tuyen.px", "Insert table Vendedores ignored");
+                Log.e("tuyen.px", "Insert table PuntosDeVanta ignored");
                 return;
             }
             for (Model2Jason.PuntosDeVanta va : list) {
@@ -517,7 +517,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         private void inserDistritos(List<Model2Jason.Distritos> list) {
             if (list == null) {
-                Log.e("tuyen.px", "Insert table Vendedores ignored");
+                Log.e("tuyen.px", "Insert table Distritos ignored");
                 return;
             }
             for (Model2Jason.Distritos va : list) {
@@ -540,7 +540,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         private void inserCorregimientos(List<Model2Jason.Corregimientos> list) {
             if (list == null) {
-                Log.e("tuyen.px", "Insert table Vendedores ignored");
+                Log.e("tuyen.px", "Insert table Corregimientos ignored");
                 return;
             }
             for (Model2Jason.Corregimientos va : list) {
@@ -610,7 +610,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         private void inserProvincias(List<Model2Jason.Provincias> list) {
             if (list == null) {
-                Log.e("tuyen.px", "Insert table Vendedores ignored");
+                Log.e("tuyen.px", "Insert table Provincias ignored");
                 return;
             }
             for (Model2Jason.Provincias va : list) {
@@ -631,7 +631,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         private void inserZonas(List<Model2Jason.Zonas> list) {
             if (list == null) {
-                Log.e("tuyen.px", "Insert table Vendedores ignored");
+                Log.e("tuyen.px", "Insert table Zonas ignored");
                 return;
             }
             for (Model2Jason.Zonas va : list) {

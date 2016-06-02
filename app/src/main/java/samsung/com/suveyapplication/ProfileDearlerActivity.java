@@ -107,8 +107,10 @@ public class ProfileDearlerActivity extends AppCompatActivity implements View.On
             for (int i = 0; i < arrayList.size(); i++) {
                 stringBuilder.append(arrayList.get(i).Question + " : " + arrayList.get(i).Answer + "\n");
             }
-            Log.e("tuyenpx", " stringBuilder = " + stringBuilder.toString());
-            mCity.setText(stringBuilder.toString());
+            String value = stringBuilder.toString();
+            Log.e("tuyenpx", "value"+value);
+            mCity.setText(value);
+            Log.e("tuyenpx", "mCity = "+mCity.getText().toString());
         }
         c.close();
 

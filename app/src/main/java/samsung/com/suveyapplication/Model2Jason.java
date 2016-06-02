@@ -3,6 +3,7 @@ package samsung.com.suveyapplication;
 import com.google.gson.annotations.SerializedName;
 import com.samsung.table.tblCorregimientos;
 import com.samsung.table.tblDistritos;
+import com.samsung.table.tblEncuestaDatos;
 import com.samsung.table.tblEncuestaDisenos;
 import com.samsung.table.tblEncuestaPreguntas;
 import com.samsung.table.tblEncuestaRespuestaGrupos;
@@ -185,5 +186,50 @@ public class Model2Jason {
         @SerializedName(tblCorregimientos.NOMBRE)
         public String NOMBRE;
     }
+
+    //12
+    public class Encutadatos {
+        @SerializedName(tblEncuestaDatos.PK_ID)
+        public String PK_ID;//2
+        @SerializedName(tblEncuestaDatos.DISENO_ID)
+        public String DISENO_ID;//3
+        @SerializedName(tblEncuestaDatos.VENDEDOR_ID)
+        public String VENDEDOR_ID;//4
+        @SerializedName(tblEncuestaDatos.PDV_ID)
+        public String PDV_ID;//5
+        @SerializedName(tblEncuestaDatos.FECHAHORA_ENCUESTA)
+        public String FECHAHORA_ENCUESTA;//6
+        @SerializedName(tblEncuestaDatos.POSICIONENCUESTA_LAT)
+        public String POSICIONENCUESTA_LAT;//7
+        @SerializedName(tblEncuestaDatos.POSICIONENCUESTA_LON)
+        public String POSICIONENCUESTA_LON;//8
+        @SerializedName(tblEncuestaDatos.FECHA_HORA_REGISTRO)
+        public String FECHA_HORA_REGISTRO;//9
+        @SerializedName(tblEncuestaDatos.POSICION_REGISTROLAT)
+        public String POSICION_REGISTROLAT;//10
+        @SerializedName(tblEncuestaDatos.POSOCION_REGISTRO_LON)
+        public String POSOCION_REGISTRO_LON;//11
+        @SerializedName(tblEncuestaDatos.PREGUNTA_01)
+        public String PREGUNTA_01;//12
+        @SerializedName(tblEncuestaDatos.PREGUNTA_02)
+        public String PREGUNTA_02;//13
+        @SerializedName(tblEncuestaDatos.PREGUNTA_03)
+        public String PREGUNTA_03;//14
+        @SerializedName(tblEncuestaDatos.PREGUNTA_04)
+        public String PREGUNTA_04;//15
+        @SerializedName(tblEncuestaDatos.PREGUNTA_05)
+        public String PREGUNTA_05;//16
+        @SerializedName(tblEncuestaDatos.PREGUNTA_06)
+        public String PREGUNTA_06;//17
+        @SerializedName(tblEncuestaDatos.PREGUNTA_07)
+        public String PREGUNTA_07;//18
+        @SerializedName(tblEncuestaDatos.PREGUNTA_08)
+        public String PREGUNTA_08;//19
+        @SerializedName(tblEncuestaDatos.PREGUNTA_09)
+        public String PREGUNTA_09;//20
+        @SerializedName(tblEncuestaDatos.PREGUNTA_10)
+        public String PREGUNTA_10;//21
+    }
+
 
 }

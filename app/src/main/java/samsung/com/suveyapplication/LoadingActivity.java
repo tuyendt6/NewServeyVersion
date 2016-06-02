@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import com.samsung.provider.SamsungProvider;
 import com.samsung.table.tblCorregimientos;
 import com.samsung.table.tblDistritos;
+import com.samsung.table.tblEncuestaDatos;
 import com.samsung.table.tblEncuestaDisenos;
 import com.samsung.table.tblEncuestaPreguntas;
 import com.samsung.table.tblEncuestaRespuestaGrupos;
@@ -134,6 +135,7 @@ public class LoadingActivity extends AppCompatActivity {
         private List<Model2Jason.Distritos> mListDistritos;
 
         private List<Model2Jason.Corregimientos> mListCorregimientos;
+        private List<Model2Jason.Encutadatos> mListEncuetadatos;
 
 
         private List<Model2Jason.Provincias> mListProvincias;
@@ -283,9 +285,14 @@ public class LoadingActivity extends AppCompatActivity {
             if (mListEncuestaRespuestas != null) {
                 mContext.getContentResolver().delete(SamsungProvider.URI_ENCURESTA_RESPUESTAS, null, null);
             }
+            QueryEncuestaDatos();
+            if (mListEncuestaRespuestas != null) {
+                mContext.getContentResolver().delete(SamsungProvider.URI_ENCURESTA_RESPUESTAS, tblEncuestaDatos.SYS + " =?", new String[]{"true"});
+            }
         }
 
         private void inSert2Database() {
+            insertEncuestaDatos(mListEncuetadatos);
             setProgress();//80
             insertVendedores(mListVendedores);
             inserDistritos(mListDistritos);
@@ -530,6 +537,7 @@ public class LoadingActivity extends AppCompatActivity {
             mListCorregimientos = mGson.fromJson(queryServerTable("http://www.tagzone.io/Ode/WebService.asmx/getAllCorregimientos"), mType);
         }
 
+
         private void inserCorregimientos(List<Model2Jason.Corregimientos> list) {
             if (list == null) {
                 Log.e("tuyen.px", "Insert table Vendedores ignored");
@@ -541,6 +549,53 @@ public class LoadingActivity extends AppCompatActivity {
                 values.put(tblCorregimientos.NOMBRE, va.NOMBRE);// 2
                 values.put(tblCorregimientos.DISTRITOID, va.DISTRITOID);//3
                 mContext.getContentResolver().insert(SamsungProvider.URI_CONREEGIMIENTOS, values);
+            }
+        }
+
+
+        private void QueryEncuestaDatos() {
+            mGson = new Gson();
+            mType = new TypeToken<List<Model2Jason.Encutadatos>>() {
+            }.getType();
+            mListEncuetadatos = mGson.fromJson(queryServerTable("http://www.tagzone.io/Ode/WebService.asmx/getAllEncuetadatos"), mType);
+        }
+
+        private void insertEncuestaDatos(List<Model2Jason.Encutadatos> list) {
+            if (list == null) {
+                Log.e("tuyen.px", "Insert table EncuestaDatos ignored");
+                return;
+            }
+            for (Model2Jason.Encutadatos va : list) {
+                ContentValues values = new ContentValues();
+
+                values.put(tblEncuestaDatos.PK_ID, va.PK_ID);// 1
+                values.put(tblEncuestaDatos.DISENO_ID, va.DISENO_ID);// 2
+                values.put(tblEncuestaDatos.FECHA_HORA_REGISTRO, va.FECHA_HORA_REGISTRO);//3
+
+                values.put(tblEncuestaDatos.PDV_ID, va.PDV_ID);// 1
+                values.put(tblEncuestaDatos.FECHAHORA_ENCUESTA, va.FECHAHORA_ENCUESTA);// 2
+                values.put(tblEncuestaDatos.POSICION_REGISTROLAT, va.POSICION_REGISTROLAT);//3
+                values.put(tblEncuestaDatos.POSICIONENCUESTA_LAT, va.POSICIONENCUESTA_LAT);//3
+                values.put(tblEncuestaDatos.POSICIONENCUESTA_LON, va.POSICIONENCUESTA_LON);//3
+                values.put(tblEncuestaDatos.SYS, "true");//3
+
+                values.put(tblEncuestaDatos.POSOCION_REGISTRO_LON, va.POSOCION_REGISTRO_LON);// 1
+                values.put(tblEncuestaDatos.VENDEDOR_ID, va.VENDEDOR_ID);// 2
+
+
+                values.put(tblEncuestaDatos.PREGUNTA_01, va.PREGUNTA_01);//3
+
+                values.put(tblEncuestaDatos.PREGUNTA_02, va.PREGUNTA_02);// 1
+                values.put(tblEncuestaDatos.PREGUNTA_03, va.PREGUNTA_03);// 2
+                values.put(tblEncuestaDatos.PREGUNTA_04, va.PREGUNTA_04);//3
+                values.put(tblEncuestaDatos.PREGUNTA_05, va.PREGUNTA_05);// 1
+                values.put(tblEncuestaDatos.PREGUNTA_06, va.PREGUNTA_06);// 2
+
+                values.put(tblEncuestaDatos.PREGUNTA_07, va.PREGUNTA_07);//3
+                values.put(tblEncuestaDatos.PREGUNTA_08, va.PREGUNTA_08);//3
+                values.put(tblEncuestaDatos.PREGUNTA_09, va.PREGUNTA_09);//3
+                values.put(tblEncuestaDatos.PREGUNTA_10, va.PREGUNTA_10);//3
+                mContext.getContentResolver().insert(SamsungProvider.URI_ENCUESTADATOS, values);
             }
         }
 

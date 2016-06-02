@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -208,6 +209,8 @@ public class AllDealerServey extends Fragment implements onSimpleSearchActionsLi
                 tblPuntosDeVenta.TBL_NAME + "." + tblPuntosDeVenta.DIRECCION, tblPuntosDeVenta.TBL_NAME + "." + tblPuntosDeVenta.POSION_LAT, tblPuntosDeVenta.TBL_NAME + "." + tblPuntosDeVenta.POSION_LON,
                 tblPuntosDeVenta.TBL_NAME + "." + tblPuntosDeVenta.ACTIVO, tblZonas.TBL_NAME + "." + tblZonas.NOMBRE + " AS Zone", tblPuntosDeVenta.TBL_NAME + "." + tblPuntosDeVenta.TELEFONO
         };
+
+
         Cursor c = getActivity().getContentResolver().query(SamsungProvider.URI_JOIN_DETAIL_ORDER, projections, null, null, tblPuntosDeVenta.TBL_NAME + "." + tblPuntosDeVenta.NOMBRE);
         if (c.getCount() == 0) {
             return;
@@ -259,13 +262,16 @@ public class AllDealerServey extends Fragment implements onSimpleSearchActionsLi
 
     private boolean checkTakedServey(String pkID) {
         //     String pkID = Util.DealerSelected.getPKID();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("question", Context.MODE_PRIVATE);
+        String ID = sharedPreferences.getString("venderID", "1");
         boolean flag = false;
         Cursor c = getActivity().getContentResolver().query(SamsungProvider.URI_ENCUESTADATOS, null, tblEncuestaDatos.PDV_ID + "=?", new String[]{pkID}, null);
 
         if (c != null & c.getCount() > 0) {
             c.moveToFirst();
             String Date = c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.FECHA_HORA_REGISTRO));
-            if (Util.String_Date_Servey.trim().equals(ConverString(Date).trim())) {
+            String ID_Verder = c.getString(c.getColumnIndexOrThrow(tblEncuestaDatos.VENDEDOR_ID));
+            if (Util.String_Date_Servey.trim().equals(ConverString(Date).trim()) && ID_Verder.equals(ID)) {
                 flag = true;
             }
         }

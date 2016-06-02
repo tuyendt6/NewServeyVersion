@@ -354,6 +354,7 @@ public class SamsungProvider extends ContentProvider {
         SQLiteDatabase sqlDB = mDbHelper.getWritableDatabase();
         long rowID = sqlDB.insertWithOnConflict(table, "", values, SQLiteDatabase.CONFLICT_REPLACE);
         getContext().getContentResolver().notifyChange(uri, null);
+
         if (rowID > 0) {
             return Uri.withAppendedPath(uri, String.valueOf(rowID));
         } else {
